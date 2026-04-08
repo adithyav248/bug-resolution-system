@@ -1,0 +1,12 @@
+[INFO] 2023-11-01 10:00:00 - Started batch refund job
+[DEBUG] 2023-11-01 10:00:01 - Processed tx_001 successfully.
+[WARN] 2023-11-01 10:00:02 - Database connection latency high.
+[INFO] 2023-11-01 10:00:03 - Processing tx_002...
+[ERROR] 2023-11-01 10:00:03 - Fatal error in refund processor.
+Traceback (most recent call last):
+  File "batch_runner.py", line 42, in <module>
+    process_refund({'amount': 100, 'exchange_rate': 0})
+  File "/app/mini_repo/processor.py", line 7, in process_refund
+    base_amount = amount / exchange_rate
+ZeroDivisionError: division by zero
+[INFO] 2023-11-01 10:00:04 - Batch job failed.
