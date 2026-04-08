@@ -14,6 +14,7 @@ if not os.environ.get("GOOGLE_API_KEY"):
 
 import json
 import subprocess
+import time  # <--- Added this to handle delays
 from typing import TypedDict, List, Dict, Any
 from pydantic import BaseModel, Field
 
@@ -125,11 +126,13 @@ class ReviewerOutput(BaseModel):
 # 3. AGENT NODES
 # ==========================================
 
-# Use Gemini 1.5 Pro for highly capable coding and reasoning
+# Use Gemini 2.5-flash for highly capable coding and reasoning
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
 
 def print_trace(agent_name, message):
     print(f"\n\033[94m[{agent_name}]\033[0m: {message}")
+    # Pause for 5 seconds so we don't trigger Google's Free Tier Rate Limits
+    time.sleep(5)
 
 def triage_agent(state: SystemState):
     print_trace("Triage Agent", "Analyzing bug report...")
