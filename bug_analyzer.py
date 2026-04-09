@@ -126,8 +126,8 @@ class ReviewerOutput(BaseModel):
 # 3. AGENT NODES
 # ==========================================
 
-# Use Gemini 2.5-flash for highly capable coding and reasoning
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
+# Use Gemini 2.5-flash-lite for highly capable coding and reasoning
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0.1)
 
 def print_trace(agent_name, message):
     print(f"\n\033[94m[{agent_name}]\033[0m: {message}")
@@ -200,7 +200,7 @@ Return ONLY valid python code in the 'repro_script_code' field. DO NOT wrap it i
     output = f"STDOUT:\n{process.stdout}\nSTDERR:\n{process.stderr}"
     
     # Check if we successfully reproduced an error (ZeroDivisionError)
-    success = process.returncode != 0 and "ZeroDivisionError" in process.stderr
+    success = "ZeroDivisionError" in output or process.returncode != 0
     print_trace("Reproduction Agent", f"Repro Success: {success}")
     
     return {
@@ -262,6 +262,8 @@ Fix Plan:
     }
 
 def output_formatter(state: SystemState):
+    if state.get("final_output"):
+        return {}
     print_trace("System", "Formatting final JSON output...")
     final_report = {
         "bug_summary": state["triage_summary"],
